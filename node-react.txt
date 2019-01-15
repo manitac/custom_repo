@@ -1,0 +1,48 @@
+node api:-https://github.com/ve-ankitgupta/ems
+
+https://codeburst.io/build-simple-medium-com-on-node-js-and-react-js-a278c5192f47
+
+>react as frontend
+> node as backend folder
+
+then on root to run both simultaneously
+
+npm init -y
+npm install concurrently --save or npm install -g concurrently
+
+in root package json:-
+{
+ "name": "kmail",
+ "version": "1.0.0",
+ "description": "",
+ "main": "index.js",
+ "scripts": {
+ "client": "cd client && npm start",
+ "server": "cd server && npm start",
+ "start": "concurrently \"npm run server\" \"npm run client\""
+ },
+ "keywords": [],
+ "author": "",
+ "license": "ISC",
+ "devDependencies": {
+ "concurrently": "³.5.1"
+ }
+}
+
+
+>>>>mlab db
+db = todo_app
+user manita/manita123
+
+https://mlab.com/databases/todo_app
+
+manitakumari@virtualemployee.com/Manita@123
+user/pass:=
+manita/Manita@123
+
+connection:-
+mongodb://<dbuser>:<dbpassword>@ds149404.mlab.com:49404/todo_app
+
+https://www.youtube.com/watch?v=yox93sB2PyQ&index=37&list=PL4cUxeGkcC9gcy9lrvMJ75z9maRw4byYp
+
+https://medium.freecodecamp.org/building-a-simple-node-js-api-in-under-30-minutes-a07ea9e390d2

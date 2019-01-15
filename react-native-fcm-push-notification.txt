@@ -1,0 +1,264 @@
+firebase:- 
+https://github.com/zo0r/react-native-push-notification
+ve.phpteam@gmail.com/Teamphp@987
+
+push app:
+
+server key:- 
+
+AAAAYVrQXOo:APA91bEWAHITxILsXb6nhsu8r26W7AcB9oj9rZ_aNYzwV2Ep4uGRNbAuMHKvjzUh9QQuTQ9o7lQtcwOimwdzdpSSx8aHzUro4EBNHtY-Qwc2WUKsbb4ag3W9yZ54Gd4GZUWKUTnAXQbB
+
+legacy key: AIzaSyDGcemFHHOfYmsS47j5-a5_bNvRmA2aWCg
+
+Sender ID:- 418135432426
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+steps:- 
+>>react-native init name
+>>cd name
+
+
+>>yarn add react-native-push-notification
+
+				OR
+				
+npm install --save react-native-push-notification 
+
+>>react-native link react-native-push-notification
+
+after that follow all step given for file changes and then register  project in firebase console 
+https://console.firebase.google.com/
+
+1. android >> build.gradle
+
+ ext {
+        //push notification
+        googlePlayServicesVersion = "+"
+        firebaseVersion = "+"
+
+        buildToolsVersion = "27.0.3"
+        minSdkVersion = 16
+        compileSdkVersion = 27
+        targetSdkVersion = 26
+        supportLibVersion = "27.1.1"
+    }
+
+ dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.google.gms:google-services:4.0.1'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+
+2. android >> app >> build.gradle
+
+	dependencies {
+		implementation 'com.google.firebase:firebase-core:16.0.1'
+	}
+
+    at the end of code add following lines:-
+
+	apply plugin: 'com.google.gms.google-services'
+
+
+3. manifest.xml  package_name = name of package mentioned in manifest tag
+
+ <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+      <!--push notification -->
+          <uses-permission android:name="android.permission.WAKE_LOCK" />
+          <permission android:name="com.nativepush.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+          <uses-permission android:name="com.nativepush.permission.C2D_MESSAGE" />
+          <!-- < Only if you're using GCM or localNotificationSchedule() > -->
+          <uses-permission android:name="android.permission.VIBRATE" />
+          <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+      <!--push notification -->
+
+
+
+	
+	 <!--push notification  after application tag and before <activity tag-->	
+        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
+			
+        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
+				
+                    <intent-filter>
+	<action android:name="android.intent.action.BOOT_COMPLETED" />
+</intent-filter>
+			
+        </receiver>
+			
+       	<service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
+			
+	<service
+ android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
+	android:exported="false" >
+				
+		<intent-filter>
+	<action android:name="com.google.firebase.MESSAGING_EVENT" />
+
+		</intent-filter>
+			
+	</service>
+      
+   <!--push notification -->
+ 
+
+
+
+
+
+other:---download google services json file and keep in android >app folder and then add the lines of code suggested there.
+
+after all open anroid studio simulator device and run: react-native run-android
+
+in app.js file call fcm to get device token and send notification using postman
+
+var PushNotification = require('react-native-push-notification');
+
+constructor(props) {
+		super(props);
+		 
+		PushNotification.configure({
+
+			onRegister: function(token) {
+				console.log( 'TOKEN:', token.token );
+			},
+
+			// (required) Called when a remote or local notification is opened or received
+			onNotification: function(notification) {
+					console.log( 'NOTIFICATION:', notification );
+
+					//notification.finish(PushNotificationIOS.FetchResult.NoData);
+			},
+			
+
+			// ANDROID ONLY: GCM or FCM Sender ID (product_number) (optional - not required for local notifications, but is need to receive remote push notifications)
+			senderID: "1016534562656",
+
+			// IOS ONLY (optional): default: all - Permissions to register.
+			permissions: {
+				alert: true,
+				badge: true,
+				sound: true
+			},
+
+			// Should the initial notification be popped automatically
+			// default: true
+			popInitialNotification: true,
+
+			/**
+			  * (optional) default: true
+			  * - Specified if permissions (ios) and token (android and ios) will requested or not,
+			  * - if not, you must call PushNotificationsHandler.requestPermissions() later
+			  */
+			requestPermissions: true,
+		});
+    
+	}
+   render() {
+}
+
+
+///after  all implementation test using postman:-
+
+https://fcm.googleapis.com/fcm/send --post method
+
+[{"key":"Authorization","value":"key=add serverkey","description":""}]
+[{"key":"Content-Type","value":"application/json","description":""}]
+
+{
+ "to" : "add device token here",
+ "notification" : {
+     "body" : "Body of Your Notification",
+     "title": "Title of Your Notification"
+ }
+}
+
+
+
+
+
+///notification code:-
+public function iosPushNotification($body_text,$notification_type,$tokens,$sound){
+        $passphrase = '';
+        // $token = '911D76D1083003755F1DF59DB984E67A921580F55BF39D1D896733B47B8525DB';
+
+        ////////////////////////////////////////////////////////////////////////////////
+        $pem_file = base_path() . Config::get('app.ios_certificate_file');
+        $ctx = stream_context_create();
+        stream_context_set_option($ctx, 'ssl', 'local_cert', $pem_file);
+        stream_context_set_option($ctx, 'ssl', 'passphrase', $passphrase);
+        // Open a connection to the APNS server
+        $fp = stream_socket_client('ssl://gateway.sandbox.push.apple.com:2195', $err,$errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+        if (!$fp){
+            return false;
+        }
+        $body_ar = array('notification_type'=>$notification_type);
+        $body['aps'] = array(
+            'alert' => $body_text,
+            'sound' => $sound,
+            );
+        
+        $body['data'] = $body_ar;        
+
+        // Encode the payload as JSON
+        $payload = json_encode($body);
+        for ($i=0; $i < count($tokens); $i++) { 
+            # code...
+            $msg = chr(0) . pack('n', 32) . pack('H*', $tokens[$i]) . pack('n', strlen($payload)) . $payload;
+            $result = fwrite($fp, $msg, strlen($msg));
+        }
+
+        if (!isset($result)){
+            return false;
+        }
+        // Close the connection to the server
+        fclose($fp);
+        return true;
+    }
+
+    public function androidPushNotification($body_text,$notification_type,$tokens,$sound){
+        // dd(Config::get('app.android_push_key'));
+        // $deviceToken = "fef9YtaYtYA:APA91bGLNiGFBnHGBAz_vUYgCL-mWyobIDpkNDgVJgeOCcUHegLrB0qagj8VzuTgdIc3Y-yvSxNXCJtkrZVdeH6YPqKtmxgfCFhx3JGXg-fhY1Ut1DB5M2xfxpr8arXSBwrpATVVwz_r";
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $headers = array (
+                'Authorization: key=' . Config::get('app.android_push_key'),
+                'Content-Type: application/json'
+        );
+        $ch = curl_init ();
+        curl_setopt ( $ch, CURLOPT_URL, $url );
+        curl_setopt ( $ch, CURLOPT_POST, true );
+        curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
+        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+        // return $tokens;
+        // curl_setopt($ch, CURLOPT_CAINFO, 'D:\Program Files (x86)\Parallels\Plesk\Additional\PHPSettings\cacert.pem.txt');
+        $fields = array (
+            'registration_ids' => $tokens,                
+            'data' => array (
+                    "message" => $body_text,
+                    "sound" => $sound,
+                    "notification_type" => $notification_type
+            )
+        );
+        $fields = json_encode ( $fields );
+        curl_setopt ( $ch, CURLOPT_POSTFIELDS, $fields );
+        $result = curl_exec ( $ch );
+        Log::info($result);
+        if(curl_error($ch))
+        {
+            echo 'error:' . curl_error($ch);exit();
+        }
+        $json = json_decode($result, true);
+        // return response()->json($json);
+        if($json['success']){
+            $status=1;
+        }
+        curl_close ( $ch );
+        if($json['success']){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
