@@ -19,7 +19,7 @@ steps:-
 >>react-native init name
 >>cd name
 
->> add local.properties file inside android folder
+>> add local.properties file inside android folder with sdk path as :- sdk.dir = C:\\Users\\ashishkumar\\AppData\\Local\\Android\\sdk
 
 >>yarn add react-native-push-notification
 
