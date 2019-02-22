@@ -1,6 +1,7 @@
 firebase:- 
 https://github.com/zo0r/react-native-push-notification
-ve.phpteam@gmail.com/Teamphp@987
+
+ve.phpteam@gmail.com/php@vep3
 
 push app:
 
@@ -18,16 +19,20 @@ steps:-
 >>react-native init name
 >>cd name
 
+>> add local.properties file inside android folder
 
 >>yarn add react-native-push-notification
 
 				OR
 				
-npm install --save react-native-push-notification 
-
+>> npm install --save react-native-push-notification 
+>> npm install
 >>react-native link react-native-push-notification
 
-after that follow all step given for file changes and then register  project in firebase console 
+>> change the forward slash to bakward slash in setting.gradle file inside android folder.
+
+>>after that follow all step given for file changes and then register  project in firebase console 
+
 https://console.firebase.google.com/
 
 1. android >> build.gradle
@@ -37,39 +42,24 @@ https://console.firebase.google.com/
         googlePlayServicesVersion = "+"
         firebaseVersion = "+"
 
-        buildToolsVersion = "27.0.3"
-        minSdkVersion = 16
-        compileSdkVersion = 27
-        targetSdkVersion = 26
-        supportLibVersion = "27.1.1"
     }
 
  dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+
         classpath 'com.google.gms:google-services:4.0.1'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 
-2. android >> app >> build.gradle
-
-	dependencies {
-		implementation 'com.google.firebase:firebase-core:16.0.1'
-	}
-
-    at the end of code add following lines:-
-
-	apply plugin: 'com.google.gms.google-services'
 
 
-3. manifest.xml  package_name = name of package mentioned in manifest tag
+
+2. manifest.xml  package_name = name of package mentioned in manifest tag
 
  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
       <!--push notification -->
           <uses-permission android:name="android.permission.WAKE_LOCK" />
-          <permission android:name="com.nativepush.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-          <uses-permission android:name="com.nativepush.permission.C2D_MESSAGE" />
+          <permission android:name="com.packagename.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+          <uses-permission android:name="com.packagename.permission.C2D_MESSAGE" />
           <!-- < Only if you're using GCM or localNotificationSchedule() > -->
           <uses-permission android:name="android.permission.VIBRATE" />
           <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -109,9 +99,20 @@ https://console.firebase.google.com/
 
 
 
-other:---download google services json file and keep in android >app folder and then add the lines of code suggested there.
+3. download google services json file and keep in android >app >>google-services.json folder and then add the lines of code suggested there like below:-
+in android >> app >> build.gradle
 
-after all open anroid studio simulator device and run: react-native run-android
+    dependencies {
+        implementation 'com.google.firebase:firebase-core:16.0.1'
+    }
+
+    at the end of code add following lines:-
+
+    apply plugin: 'com.google.gms.google-services'
+
+ 
+
+then run >> react-native run-android
 
 in app.js file call fcm to get device token and send notification using postman
 
@@ -165,17 +166,18 @@ constructor(props) {
 
 https://fcm.googleapis.com/fcm/send --post method
 
-[{"key":"Authorization","value":"key=add serverkey","description":""}]
-[{"key":"Content-Type","value":"application/json","description":""}]
+
+header;-
+Authorization:"key=AIzaSyBK5UHu8zLTlJ98lZ8_PHcXrzr4fUg60PY"// server key or legacy server key for firebase console registered project,
+Content-Type:"application/json"
 
 {
- "to" : "add device token here",
- "notification" : {
-     "body" : "Body of Your Notification",
-     "title": "Title of Your Notification"
- }
+  "to" : "ePmAXVHRnIs:APA91bGkrfa7_OGZ1Xp2I8_kpdDdRP5l7gESmYUIFJlIQXeWnJZRCZmzevtkJltTcXTKAcR6FC1JuaZFkxlanHLYPthjw81bzWayYi3LG2Dql_fG1TK3CCld_MWf5UR7F5KBEstelmDB",//device token
+   "notification": {
+    "title" : "pushnotify title latest",
+    "body"  : "pushnotify message latest"
+   }
 }
-
 
 
 
@@ -262,3 +264,4 @@ public function iosPushNotification($body_text,$notification_type,$tokens,$sound
             return 0;
         }
     }
+
